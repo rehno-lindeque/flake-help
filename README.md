@@ -7,6 +7,22 @@ Unfortunately this currently relies on a bit of an awful hack for pulling the de
 Furthermore, app `description` attributes aren't specified as part of the normal flake schema.
 That is to say, this is all very unlikely to be future proof as is!
 
+In short:
+
+```nix
+flake-help.lib.mkHelp {
+  name = "my-flake";
+  flake = self;
+  inherit system;
+  inherit (pkgs) writeScript;
+  additionalCommands = {
+    "command" = "description";
+  };
+  supplementalNotes = ''
+    Extra notes at the end of the help message
+  '';
+}
+```
 
 Example usage:
 
@@ -56,27 +72,28 @@ Example usage:
 
       packages = {
         hello-octopus = pkgs.writeScript "hello-octopus" ''printf '🐙 ' && ${pkgs.hello}/bin/hello "$@"'';
+        help = flake-help.lib.mkHelp {
+          name = "hello-octopus";
+          flake = self;
+          inherit system;
+          inherit (pkgs) writeScript;
+          additionalCommands = {
+            "nix run .#say-hello -- -g \"Hello $(whoami)!\"" = "A more personal greeting";
+          };
+          supplementalNotes = ''
+            This has been your help message...
+
+            Have fun!
+            🐙
+          '';
+        };
       };
 
       apps = {
         help = {
           type = "app";
           description = "display this help message";
-          program = (flake-help.lib.mkHelp {
-            name = "hello-octopus";
-            flake = self;
-            inherit system;
-            inherit (pkgs) writeScript;
-            additionalCommands = {
-              "nix run .#say-hello -- -g \"Hello $(whoami)!\"" = "A more personal greeting";
-            };
-            supplementalNotes = ''
-              This has been your help message...
-
-              Have fun!
-              🐙
-            '';
-          }).outPath;
+          program = "${self.packages.${system}.help}";
         };
 
         say-hello = {
