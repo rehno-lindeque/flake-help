@@ -135,6 +135,6 @@ Have fun!
 🐙
 [hello-octopus]$ nix run .#say-hello
 🐙 Hello, world!
-[hello-octopus]$ nix run .#snix run .#say-hello -- -g "Hello $(whoami)!"
+[hello-octopus]$ nix run .#say-hello -- -g "Hello $(whoami)!"
 🐙 Hello me!
 ```
