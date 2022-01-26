@@ -7,6 +7,8 @@ Unfortunately this currently relies on a bit of an awful hack for pulling the de
 Furthermore, app `description` attributes aren't specified as part of the normal flake schema.
 That is to say, this is all very unlikely to be future proof as is!
 
+You may want to take a look at [numtide's devshell](https://numtide.github.io/devshell/) for something more serious.
+
 In short:
 
 ```nix
